@@ -1,0 +1,47 @@
+version: 1.1
+backend:
+  phases:
+    build:
+      commands:
+        - echo "Creating required env_vars"
+        - export DISTRIB="EC2console App Amplify ${SUFFIX}"
+        - export USERPOOL="ec2console6c53aaf1_userpool_6c53aaf1-${SUFFIX}"
+        - update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.9 11
+        - /usr/local/bin/pip3.9 install --user pipenv
+        - npm install -g @aws-amplify/cli
+        - npm install
+        - amplifyPush --simple
+        - amplify publish -y
+        #- export CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Comment == '$DISTRIB'].Id" --output text)
+        #- aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
+        #- export AMPLIFY_USERPOOL_ID=$(aws cognito-idp list-user-pools --max-results 60 --query "UserPools[?Name == '$USERPOOL'].Id" --output text)
+        #- export ADMINS_GROUP=$(aws cognito-idp list-groups  --user-pool-id $AMPLIFY_USERPOOL_ID --query 'Groups[?GroupName == `admins`].GroupName' --output text)
+        #- export VM_ANALYSTS_GROUP=$(aws cognito-idp list-groups  --user-pool-id $AMPLIFY_USERPOOL_ID --query 'Groups[?GroupName == `vm_analysts`].GroupName' --output text)
+        #- export VM_MANAGERS_GROUP=$(aws cognito-idp list-groups  --user-pool-id $AMPLIFY_USERPOOL_ID --query 'Groups[?GroupName == `vm_managers`].GroupName' --output text)
+        #- |
+        #  if [ "$ADMINS_GROUP" != "admins" ]; then
+        #    aws cognito-idp create-group --group-name admins --user-pool-id $AMPLIFY_USERPOOL_ID
+        #  fi
+        #- |
+        #  if [ "$VM_ANALYSTS_GROUP" != "vm_analysts" ]; then
+        #    aws cognito-idp create-group --group-name vm_analysts --user-pool-id $AMPLIFY_USERPOOL_ID
+        #  fi
+        #- |
+        #  if [ "$VM_MANAGERS_GROUP" != "vm_managers" ]; then
+        #    aws cognito-idp create-group --group-name vm_managers --user-pool-id $AMPLIFY_USERPOOL_ID
+        #  fi
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
