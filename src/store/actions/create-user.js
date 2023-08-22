@@ -1,11 +1,11 @@
 import { API } from 'aws-amplify';
 
 // function getStats() will return stats received from a lambda function in the backend
-export const createUser = async(collection_name) => {
+export const createUser = async(username) => {
     const myInit = {
         body: {
-          collection_name,
-          action: "create_collection"
+          username,
+          action: "create_user"
         }
       };
     //let res = await API.post('BWConsoleAPI', '/bwapi', myInit);

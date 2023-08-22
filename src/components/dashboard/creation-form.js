@@ -27,8 +27,7 @@ export default function CreationForm() {
         setCurrentStep,
         setRWUsers,
         setROUsers,
-        setHUsers,
-        createGroup
+        setHUsers
     ]  = useAppStore((state) => [ 
         state.iFaceLang,
         state.isLoading,
@@ -42,8 +41,7 @@ export default function CreationForm() {
         state.setCurrentStep,
         state.setRWUsers,
         state.setROUsers,
-        state.setHUsers,
-        state.createGroup
+        state.setHUsers
         ]);
         const [dummy, setDummy] = useState("");
     return (
